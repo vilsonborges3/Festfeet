@@ -1,4 +1,5 @@
 import User from '../models/User';
+import Recipient from '../models/recipient';
 
 class UserController {
   async store(req, res) {
@@ -14,6 +15,14 @@ class UserController {
       name,
       email,
     });
+  }
+
+  async createRecipients(req, res) {
+    console.log('teste');
+    const { recipint } = await Recipient.create(req.body);
+    console.log('teste3');
+    console.log(recipint);
+    return res.json(recipint);
   }
 }
 
