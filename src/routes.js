@@ -13,4 +13,10 @@ routes.post(
   UserController.createRecipients
 );
 
+routes.put(
+  '/updateRecipients',
+  authMiddleware,
+  UserController.updateRecipients
+);
+
 export default routes;

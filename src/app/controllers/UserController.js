@@ -18,11 +18,22 @@ class UserController {
   }
 
   async createRecipients(req, res) {
-    console.log('teste');
     const { recipint } = await Recipient.create(req.body);
-    console.log('teste3');
-    console.log(recipint);
     return res.json(recipint);
+  }
+
+  async updateRecipients(req, res) {
+    const { name } = req.body;
+
+    const recipientFound = await Recipient.findOne({ where: { name } });
+
+    if (!recipientFound) {
+      return res.status(400).json({ error: 'Recipient not registered' });
+    }
+
+    const recp = await recipientFound.update(req.body);
+
+    return res.json(recp);
   }
 }
 
