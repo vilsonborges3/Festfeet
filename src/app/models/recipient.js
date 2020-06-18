@@ -2,7 +2,6 @@ import Sequelize, { Model } from 'sequelize';
 
 class Recipient extends Model {
   static init(sequelize) {
-    console.log('teste2');
     super.init(
       {
         name: Sequelize.STRING,
