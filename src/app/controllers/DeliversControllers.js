@@ -30,6 +30,42 @@ class DeliversCotrolers {
 
     return res.json(delivers);
   }
+
+  async update(req, res) {
+    const deliver = await Delivers.findOne({
+      where: {
+        email: req.body.email,
+      },
+    });
+
+    if (!deliver) {
+      return res.status(400).json({ error: 'Deliver does not found' });
+    }
+
+    const newDeliver = await deliver.update(req.body);
+
+    return res.json(newDeliver);
+  }
+
+  async remove(req, res) {
+    const deliver = await Delivers.findOne({
+      where: {
+        email: req.body.email,
+      },
+    });
+
+    if (!deliver) {
+      return res.status(400).json({ error: 'Deliver does not found' });
+    }
+
+    const removed = await Delivers.destroy({
+      where: {
+        email: req.body.email,
+      },
+    });
+
+    return res.json(removed);
+  }
 }
 
 export default new DeliversCotrolers();
