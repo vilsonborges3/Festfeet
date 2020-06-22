@@ -19,6 +19,7 @@ routes.post('/createRecipients', UserController.createRecipients);
 routes.put('/updateRecipients', UserController.updateRecipients);
 
 routes.post('/createDelivers', DeliversCotrolers.createDelivers);
+routes.get('/delivers', DeliversCotrolers.index);
 
 routes.post('/files', upload.single('file'), FileController.store);
 
