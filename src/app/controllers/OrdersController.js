@@ -1,3 +1,5 @@
+import { Op } from 'sequelize';
+import { getHours, getMinutes } from 'date-fns';
 import Delivers from '../models/Delivers';
 import Order from '../models/Order';
 import Recipient from '../models/recipient';
@@ -5,7 +7,6 @@ import Recipient from '../models/recipient';
 class OrdersController {
   async store(req, res) {
     const { product, deliverman_email, recipient_name } = req.body;
-    console.log(product);
     if (!product) {
       return res.status(400).json({ error: 'product name were not found' });
     }
@@ -24,21 +25,60 @@ class OrdersController {
       },
     });
 
+    if (!deliveryman_id) {
+      return res.status(400).json({ error: 'deliveryman does not found' });
+    }
+
     const { id: recipient_id } = await Recipient.findOne({
       where: {
         name: recipient_name,
       },
     });
-    const start_date = new Date();
+
+    if (!recipient_id) {
+      return res.status(400).json({ error: 'recipient does not found' });
+    }
 
     const order = await Order.create({
       product,
       deliveryman_id,
       recipient_id,
-      start_date,
     });
 
     return res.json(order);
+  }
+
+  async show(req, res) {
+    const { id } = req.params;
+
+    const start_date = new Date();
+
+    const hour = getHours(start_date);
+    if (!(hour >= 8 && hour < 18)) {
+      return res.status(400).json({ error: "It's not time to pick up" });
+    }
+
+    const order = await Order.findByPk(id);
+
+    const newOrder = await order.update({
+      start_date,
+    });
+
+    return res.json(newOrder);
+  }
+
+  async completed(req, res) {
+    const { id } = req.params;
+
+    const end_date = new Date();
+
+    const order = await Order.findByPk(id);
+
+    const newOrder = await order.update({
+      end_date,
+    });
+
+    return res.json(newOrder);
   }
 }
 
