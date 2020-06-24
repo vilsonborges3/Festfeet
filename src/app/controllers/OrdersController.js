@@ -5,6 +5,13 @@ import Order from '../models/Order';
 import Recipient from '../models/recipient';
 
 class OrdersController {
+  async index(req, res) {
+    const orders = await Order.findAll({
+      where: { end_date: null },
+    });
+    return res.json(orders);
+  }
+
   async store(req, res) {
     const { product, deliverman_email, recipient_name } = req.body;
     if (!product) {
@@ -77,6 +84,28 @@ class OrdersController {
     const newOrder = await order.update({
       end_date,
     });
+
+    return res.json(newOrder);
+  }
+
+  async update(req, res) {
+    const { id } = req.params;
+
+    const order = await Order.findByPk(id);
+
+    const newOrder = await order.update(req.body);
+
+    return res.json(newOrder);
+  }
+
+  async delete(req, res) {
+    const { id } = req.params;
+
+    const order = await Order.findByPk(id);
+
+    const cancelated_at = new Date();
+
+    const newOrder = await order.update({ cancelated_at });
 
     return res.json(newOrder);
   }
