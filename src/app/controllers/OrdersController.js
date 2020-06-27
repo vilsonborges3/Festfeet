@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import { getHours, getMinutes } from 'date-fns';
+import { getHours, getDay, differenceInHours } from 'date-fns';
 import Delivers from '../models/Delivers';
 import Order from '../models/Order';
 import Recipient from '../models/recipient';
@@ -61,6 +61,13 @@ class OrdersController {
     const start_date = new Date();
 
     const hour = getHours(start_date);
+
+    const difference = differenceInHours(0, Number(hour));
+
+    if (difference <= 24) {
+      console.log(difference);
+    }
+
     if (!(hour >= 8 && hour < 18)) {
       return res.status(400).json({ error: "It's not time to pick up" });
     }
@@ -108,6 +115,18 @@ class OrdersController {
     const newOrder = await order.update({ cancelated_at });
 
     return res.json(newOrder);
+  }
+
+  async deliverymanList(req, res) {
+    const { id } = req.params;
+
+    const orders = await Order.findAll({
+      where: {
+        deliveryman_id: id,
+      },
+    });
+
+    return res.json(orders);
   }
 }
 

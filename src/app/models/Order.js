@@ -1,6 +1,4 @@
 import Sequelize, { Model } from 'sequelize';
-import Delivers from './Delivers';
-import Recipient from './recipient';
 
 class Order extends Model {
   static init(sequelize) {
